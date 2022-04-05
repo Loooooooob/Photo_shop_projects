@@ -32,6 +32,7 @@ int main()
 {
   loadImage();
   // alhlan ya user ya habibe
+//   ahlan ya user ya habibe22
 //   int num;
 //   cout<<"2->Invert_Filter\n5->Rotate_Image\n8->Rotate_Image\n";
 //   cout<<"please choose the filter you want :  ";
