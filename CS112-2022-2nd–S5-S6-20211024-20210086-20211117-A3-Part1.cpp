@@ -155,35 +155,35 @@ void save_img2()
 }
 // ________________________________________
 void Black_White() {
-  cout << "We do Black_White image\n************************"<<endl<<endl;
-  // nested loop for array two D
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
+   cout << "We do Black_White image\n************************"<<endl<<endl;
+   // nested loop for array two D
+   for (int i = 0; i < SIZE; i++) {
+      for (int j = 0; j< SIZE; j++) {
 
-        if (image[i][j] > 127)
-            image[i][j] = 255;// make pixel white 
-        else
-            image[i][j] = 0;//make pixel black
+         if (image[i][j] > 127)
+               image[i][j] = 255;// make pixel white 
+         else
+               image[i][j] = 0;//make pixel black
 
-    }
-  }
+      }
+   }
 }
 // _________________________________________
 void Invert_Filter (){
-   for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
+      for (int i = 0; i < SIZE; i++) {
+         for (int j = 0; j< SIZE; j++) {
 
-// if the pixel is white we turn it into black
-      if (image[i][j] ==255)
-         image[i][j] = 0;
-// if the pixel is black we turn it into white         
-      else if(image[i][j] ==0)
-         image[i][j] = 255;
-// if not black or white we sub from 255  
-      else
-         image[i][j]= 255-image[i][j];      
-    }
-  }
+            // if the pixel is white we turn it into black
+            if (image[i][j] ==255)
+               image[i][j] = 0;
+            // if the pixel is black we turn it into white         
+            else if(image[i][j] ==0)
+               image[i][j] = 255;
+            // if not black or white we sub from 255  
+            else
+               image[i][j]= 255-image[i][j];      
+         }
+      }
 }
 // ________________________________________
 void flip_image(){
