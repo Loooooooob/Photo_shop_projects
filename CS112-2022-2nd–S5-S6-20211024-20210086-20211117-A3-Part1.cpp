@@ -23,6 +23,7 @@ unsigned char temp[SIZE][SIZE];
 unsigned char temp2[SIZE][SIZE/2];
 unsigned char image2 [SIZE][SIZE];
 unsigned char new_image[SIZE][SIZE];
+unsigned char ShuffleImage[4][128][128];
 // __________________________________
 
 
@@ -40,6 +41,8 @@ void Invert_Filter ();
 void flip_image(); 
 void Rotate_Image();
 void Enlarge_Image();
+void mirror_image();
+void Shuffle_Image();
 void blur();
 void merge();
 // ____________________________________
@@ -48,53 +51,68 @@ void merge();
 int main()
 {
 
-   // choose from filters
-   int num;
-   cout<<"Ahlan ya user ya habibi\n";
-   cout<<"1->Black_White\n2->Invert_Filter\n3->merge_filter\n4->flip_image\n5->Rotate_Image\n8->Enlarge_Image\n12->blur_filter\n0->Exit\n";
-   cout<<"please choose the filter you want :  ";
-   cin>>num;
-   if(num==1){
-         loadImage();
-         Black_White();
-         saveImage();
-   }
-   else if(num==2){
-         loadImage();
-         Invert_Filter ();
-         saveImage();
-   }
-   else if(num==3){
-         load_img();
-         load_img2();
-         merge();
-         save_img2();
-   }
-   else if(num==4){
-         loadImage();
-         flip_image();
-         saveImage(); 
-   }
-   else if(num==5){
-         loadImage();
-         Rotate_Image();
-         saveImage();
-   }  
-   else if(num==8){
-         loadImage();
-         Enlarge_Image();
-         saveImage();
-   }  
-   else if(num==12){
-         load_img();
-         blur();
-         save_img2();
-         
-   }
-   else if(num==0){
-      cout<<"Thank you for using photoshop";
-   }
-
+      // choose from filters
+      int num;
+      cout<<"Ahlan ya user ya habibi\n";
+      cout<<"1->Black_White\n2->Invert_Filter\n3->merge_filter\n4->flip_image\n6->Rotate_Image\n7->detect\n8->Enlarge_Imagen\n";
+      cout<<"10->mirror_image\n11->Shuffle_Image\n12->blur_filter\n0->Exit\n";
+      cout<<"please choose the filter you want :  ";
+      cin>>num;
+      if(num==1){
+            loadImage();
+            Black_White();
+            saveImage();
+      }
+      else if(num==2){
+            loadImage();
+            Invert_Filter ();
+            saveImage();
+      }
+      else if(num==3){
+            load_img();
+            load_img2();
+            merge();
+            save_img2();
+      }
+      else if(num==4){
+            loadImage();
+            flip_image();
+            saveImage(); 
+      }
+      else if(num==6){
+            loadImage();
+            Rotate_Image();
+            saveImage();
+      }  
+      // else if(num==7){
+      //       loadImage();
+      //       Rotate_Image();
+      //       saveImage();
+      // }  
+      else if(num==8){
+            loadImage();
+            Enlarge_Image();
+            saveImage();
+      }  
+      else if(num==10){
+            loadImage();
+            mirror_image();
+            saveImage();
+      }  
+      else if(num==11){
+            loadImage();
+            Shuffle_Image();
+            saveImage();
+      }  
+      else if(num==12){
+            load_img();
+            blur();
+            save_img2();
+            
+      }
+      else if(num==0){
+         cout<<"Thank you for using photoshop";
+      }
    return 0;
 }
 // ________________________________________
@@ -252,7 +270,43 @@ void Rotate_Image(){
    }
 }
 // ___________________________________
+void mirror_image(){
+   int x;
+   cout <<"1-if you want 1/2 right\n2-if you want 1/2 left\n3-if you want 1/2 lower\n4-if you want 1/2 upper\n\n ";
+   cout<<"Enter your choice : ";
+   cin >> x;
+   if (x == 1)
+   {
+      for (int i = 0; i < SIZE; i++){
+         for (int j = 0; j < SIZE; j++){
+         image[i][j]= image[i][SIZE-j];
+         }
+      }
+   }
+   if (x == 2){
+      for (int i = 0; i < SIZE; i++) {
+         for (int j = SIZE/2; j < SIZE; j++) {
+         image[i][j] = image[i][256-j];
+         }
+      }
+   }
+   if (x == 3){
+      for (int i = 0; i < SIZE; i++){
+         for (int j = 0; j < SIZE; j++){
+            image[i][j]= image[SIZE-1-i][j];
+         }
+      }
+   }
+   if (x == 4){
+      for (int i = 0; i < SIZE; i++){
+         for (int j = 0; j < SIZE; j++){
+            image[SIZE-1-i][j]= image[i][j];
+         }
+      }
+   }
+}
 
+// ___________________________________
 /*function that makes you choose 2 pictures to merge together and saves it*/
 void merge() {
 
@@ -364,6 +418,104 @@ void Enlarge_Image(){
    }
 }
 // ____________________________________________
+void Shuffle_Image(){
+   int a,b,c,d,x=0,y=0;
+   cout<<"please enter the arrange of photos :";
+   cin>>a>>b>>c>>d;
+      // top left side 
+      for (int i = 0; i < SIZE/2; i++) {
+         for (int j = 0; j< SIZE/2; j++) {
+            // assign part 1 to top left side 
+            ShuffleImage[0][x][y]=image[i][j];
+            y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+      // top right side 
+      for (int i = 0; i < SIZE/2; i++) {
+         for (int j = 128; j< SIZE; j++) {
+            // assign part 2 to top right side
+            ShuffleImage[1][x][y]=image[i][j];
+           y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+         // down left side
+      for (int i = 128; i < SIZE; i++) {
+         for (int j = 0; j< SIZE/2; j++) {
+            // assign part 4 to down left side
+            ShuffleImage[2][x][y]=image[i][j];
+            y+=1;
+         }
+         y=0;
+         x+=1;
+      } 
+      x=0;
+      // down right side
+
+      for (int i = 128; i < SIZE; i++) {
+         for (int j = 128; j< SIZE; j++) {
+            // assign part 4 to down right side
+            ShuffleImage[3][x][y]=image[i][j];
+            y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+
+      // save ShuffleImage in image ( top left side ) 
+      for (int i = 0; i < SIZE/2; i++) {
+         for (int j = 0; j< SIZE/2; j++) {
+            image[i][j]=ShuffleImage[a-1][x][y];
+           y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+      // save ShuffleImage in image ( top right side ) 
+      for (int i = 0; i < SIZE/2; i++) {
+         for (int j = 128; j< SIZE; j++) {
+            image[i][j]=ShuffleImage[b-1][x][y];
+           y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+      // save ShuffleImage in image (down left side)
+      for (int i = 128; i < SIZE; i++) {
+         for (int j = 0; j< SIZE/2; j++) {
+            image[i][j]=ShuffleImage[c-1][x][y];
+           y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+      // save ShuffleImage in image (down right side)
+      for (int i = 128; i < SIZE; i++) {
+         for (int j = 128; j< SIZE; j++) {
+            image[i][j]=ShuffleImage[d-1][x][y];
+           y+=1;
+         }
+         y=0;
+         x+=1;
+      }
+      x=0;
+}
+
+
+
+
+
+
+
 
 
 
