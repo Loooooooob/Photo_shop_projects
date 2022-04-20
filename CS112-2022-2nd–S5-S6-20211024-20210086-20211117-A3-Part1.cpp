@@ -2,7 +2,7 @@
 // Purpose: Demonstrate use of bmplip for handling
 //          bmp colored and grayscale images
 /* Authors:  Tawfik Mohamed Khalil        id->20211024
-             Badr Nasr Al-Din Al-Badri    id->20210086
+             Badr Nasr Al-Deen Al-Badri    id->20210086
              Youssef Abdullah Ahmed       id->20211117
 
 */
