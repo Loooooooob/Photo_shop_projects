@@ -262,6 +262,37 @@ void Rotate_Image(){
       }
       
    }
+  // ________________________________________
+  void detect(){
+cout<<"detect edges for image\n*****************************\n\n";
+bool temp[SIZE][SIZE];
+//make image black and white
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j< SIZE; j++) {
+
+        if (image[i][j] > 127)
+            image[i][j] = 255;
+        else
+            image[i][j] = 0;
+    }
+  }
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j< SIZE; j++) {
+            temp[i][j]=image[i][j];
+            //check that index [i][j] that the index before it and after is black
+        if (image [i][j+1]==0 && image[i][j-1]==0 && image[i+1][j]==0 && image[i-1][j]==0 && image[i+1][j+1]==0 && image[i+1][j-1]==0 && image[i-1][j+1]==0 && image[i-1][j-1]==0){
+                temp[i][j]=true;//if if condition is true dont edit this index
+      }
+    }
+  }
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j< SIZE; j++) {
+            if (temp[i][j]==1){
+                image[i][j]=255;
+      }
+    }
+  }
+}
    // save newimage in image
    for (int i = 0; i < SIZE; i++) {
       for (int j = 0; j< SIZE; j++) {
