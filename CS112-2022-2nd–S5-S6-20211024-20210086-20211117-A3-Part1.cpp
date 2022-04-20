@@ -1,9 +1,10 @@
-// Program: photoshop.cpp
-// Purpose: Demonstrate use of bmplip for handling
-//          bmp colored and grayscale images
-/* Authors:  Tawfik Mohamed Khalil        id->20211024
-             Badr Nasr Al-Deen Al-Badri    id->20210086
-             Youssef Abdullah Ahmed       id->20211117
+// Program:    photoshop.cpp
+// Purpose:    Demonstrate use of bmplip for handling
+//             bmp colored and grayscale images
+
+/* Authors:    Tawfik Mohamed Khalil        id->20211024
+               Badr Nasr Al-Deen Al-Badri    id->20210086
+               Youssef Abdullah Ahmed       id->20211117
 
 */
 // Date:    17 April 2022
@@ -40,6 +41,7 @@ void Black_White();
 void Invert_Filter ();
 void flip_image(); 
 void Rotate_Image();
+void detect();
 void Enlarge_Image();
 void mirror_image();
 void Shuffle_Image();
@@ -84,11 +86,11 @@ int main()
             Rotate_Image();
             saveImage();
       }  
-      // else if(num==7){
-      //       loadImage();
-      //       Rotate_Image();
-      //       saveImage();
-      // }  
+      else if(num==7){
+            loadImage();
+            detect();
+            saveImage();
+      }  
       else if(num==8){
             loadImage();
             Enlarge_Image();
@@ -262,41 +264,36 @@ void Rotate_Image(){
       }
       
    }
-  // ________________________________________
-  void detect(){
-cout<<"detect edges for image\n*****************************\n\n";
-bool temp[SIZE][SIZE];
-//make image black and white
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
-
-        if (image[i][j] > 127)
-            image[i][j] = 255;
-        else
-            image[i][j] = 0;
-    }
-  }
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
-            temp[i][j]=image[i][j];
-            //check that index [i][j] that the index before it and after is black
-        if (image [i][j+1]==0 && image[i][j-1]==0 && image[i+1][j]==0 && image[i-1][j]==0 && image[i+1][j+1]==0 && image[i+1][j-1]==0 && image[i-1][j+1]==0 && image[i-1][j-1]==0){
-                temp[i][j]=true;//if if condition is true dont edit this index
-      }
-    }
-  }
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
-            if (temp[i][j]==1){
-                image[i][j]=255;
-      }
-    }
-  }
 }
-   // save newimage in image
+// ________________________________________
+void detect(){
+   cout<<"detect edges for image\n*****************************\n\n";
+   bool temp[SIZE][SIZE];
+   //make image black and white
    for (int i = 0; i < SIZE; i++) {
       for (int j = 0; j< SIZE; j++) {
-         image[i][j]=newimage[i][j];
+
+         if (image[i][j] > 127)
+               image[i][j] = 255;
+         else
+               image[i][j] = 0;
+      }
+   }
+   for (int i = 0; i < SIZE; i++) {
+      for (int j = 0; j< SIZE; j++) {
+               temp[i][j]=image[i][j];
+               //check that index [i][j] that the index before it and after is black
+         if (image [i][j+1]==0 && image[i][j-1]==0 && image[i+1][j]==0 && image[i-1][j]==0 
+         && image[i+1][j+1]==0 && image[i+1][j-1]==0 && image[i-1][j+1]==0 && image[i-1][j-1]==0){
+                  temp[i][j]=true;//if if condition is true dont edit this index
+         }
+      }
+   }
+   for (int i = 0; i < SIZE; i++) {
+      for (int j = 0; j< SIZE; j++) {
+               if (temp[i][j]==1){
+                  image[i][j]=255;
+         }
       }
    }
 }
@@ -336,7 +333,6 @@ void mirror_image(){
       }
    }
 }
-
 // ___________________________________
 /*function that makes you choose 2 pictures to merge together and saves it*/
 void merge() {
