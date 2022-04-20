@@ -317,7 +317,7 @@ void mirror_image(){
    if (x == 2){
       for (int i = 0; i < SIZE; i++) {
          for (int j = SIZE/2; j < SIZE; j++) {
-         image[i][j] = image[i][256-j];
+         image[i][j] = image[i][SIZE-j];
          }
       }
    }
