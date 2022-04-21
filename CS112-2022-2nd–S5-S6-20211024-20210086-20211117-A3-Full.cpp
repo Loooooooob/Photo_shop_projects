@@ -25,9 +25,6 @@ unsigned char temp2[SIZE][SIZE/2];
 unsigned char image2 [SIZE][SIZE];
 unsigned char ShuffleImage[4][128][128];
 // __________________________________
-
-
-// __________________________________
 // Functions
 void loadImage ();
 void load_img2();
