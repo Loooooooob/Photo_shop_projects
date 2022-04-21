@@ -1,6 +1,6 @@
 // Program:    photoshop.cpp
 // Purpose:    Demonstrate use of bmplip for handling
-//             bmp colored and grayscale images
+//             bmp grayscale images
 
 /* Authors:    Tawfik Mohamed Khalil         id->20211024
                Badr Nasr Al-Deen Al-Badri    id->20210086
