@@ -2,14 +2,14 @@
 // Purpose:    Demonstrate use of bmplip for handling
 //             bmp colored and grayscale images
 
-/* Authors:    Tawfik Mohamed Khalil        id->20211024
+/* Authors:    Tawfik Mohamed Khalil         id->20211024
                Badr Nasr Al-Deen Al-Badri    id->20210086
-               Youssef Abdullah Ahmed       id->20211117
+               Youssef Abdullah Ahmed        id->20211117
 
 */
 // Date:    17 April 2022
 // Version: 1.1
-
+// _________________________________
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -23,7 +23,6 @@ unsigned char newimage[SIZE][SIZE];
 unsigned char temp[SIZE][SIZE];
 unsigned char temp2[SIZE][SIZE/2];
 unsigned char image2 [SIZE][SIZE];
-unsigned char new_image[SIZE][SIZE];
 unsigned char ShuffleImage[4][128][128];
 // __________________________________
 
@@ -40,9 +39,11 @@ void save_img2();
 void Black_White();
 void Invert_Filter ();
 void flip_image(); 
+void darken_lighten();
 void Rotate_Image();
 void detect();
 void Enlarge_Image();
+void shrink ();
 void mirror_image();
 void Shuffle_Image();
 void blur();
@@ -56,8 +57,8 @@ int main()
       // choose from filters
       int num;
       cout<<"Ahlan ya user ya habibi\n";
-      cout<<"1->Black_White\n2->Invert_Filter\n3->merge_filter\n4->flip_image\n6->Rotate_Image\n7->detect\n8->Enlarge_Imagen\n";
-      cout<<"10->mirror_image\n11->Shuffle_Image\n12->blur_filter\n0->Exit\n";
+      cout<<"1->Black_White\n2->Invert_Filter\n3->merge_filter\n4->flip_image\n5->darken_lighten\n6->Rotate_Image";
+      cout<<"\n7->detect\n8->Enlarge_Imagen\n9->shrink\n10->mirror_image\n11->Shuffle_Image\n12->blur_filter\n0->Exit\n";
       cout<<"please choose the filter you want :  ";
       cin>>num;
       if(num==1){
@@ -81,6 +82,11 @@ int main()
             flip_image();
             saveImage(); 
       }
+      else if(num==5){
+            loadImage();
+            darken_lighten();
+            save_img2();
+      }
       else if(num==6){
             loadImage();
             Rotate_Image();
@@ -95,6 +101,11 @@ int main()
             loadImage();
             Enlarge_Image();
             saveImage();
+      }  
+      else if(num==9){
+            loadImage();
+            shrink ();
+            save_img2();
       }  
       else if(num==10){
             loadImage();
@@ -171,7 +182,7 @@ void save_img2()
     cout << "Enter target image file name: ";
     cin >> imgfilename;
     strcat(imgfilename, ".bmp");
-    writeGSBMP(imgfilename, new_image);
+    writeGSBMP(imgfilename, newimage);
 }
 // ________________________________________
 void Black_White() {
@@ -188,7 +199,7 @@ void Black_White() {
       }
    }
 }
-// _________________________________________
+// _________________________________________________________________________________________________________________________________
 void Invert_Filter (){
       for (int i = 0; i < SIZE; i++) {
          for (int j = 0; j< SIZE; j++) {
@@ -205,7 +216,18 @@ void Invert_Filter (){
          }
       }
 }
-// ________________________________________
+// _____________________________________________________________________________________________________________________
+/*function that makes you choose 2 pictures to merge together and saves it*/
+void merge() {
+
+   for(int i=0; i<SIZE; i++){
+      for (int j=0; j<SIZE; j++){
+         newimage[i][j]=(image[i][j] + image2[i][j])/2;
+      }
+   }
+
+}
+// ________________________________________________________________________________________________
 void flip_image(){
    cout<<"we do horizon or vertical flip image\n*************************************\n\n";
    cout<<"choice 1 for horizon image\nAny other choice for vertical image\n\n";
@@ -220,10 +242,10 @@ void flip_image(){
       // this loop for rows 
       //size/2 because we edit rows 
       for (int i=0 ;i<SIZE/2; i++){
-         for (int j=0; j<SIZE;j++){
-                  temp[i][j]=image[i][j];
-                  image[i][j]=image[255-i][j];
-                  image[255-i][j]=temp[i][j];//make array image = edit array (temp)
+         for (int j=0; j<SIZE;j++){ 
+            temp[i][j]=image[i][j];
+            image[i][j]=image[255-i][j];
+            image[255-i][j]=temp[i][j];//make array image = edit array (temp)
          }
       }
    }
@@ -232,14 +254,43 @@ void flip_image(){
       //size/2 because we edit column
       for (int i=0 ;i<SIZE; i++){
          for (int j=0; j<SIZE/2;j++){
-                  temp2[i][j]=image[i][255-j];
-                  image[i][255-j]=image[i][j];
-                  image[i][j]=temp2[i][j];//make array image = edit array (temp2)
+            temp2[i][j]=image[i][255-j];
+            image[i][255-j]=image[i][j];
+            image[i][j]=temp2[i][j];//make array image = edit array (temp2)
          }
       }
    }
 }
-// ________________________________________
+// ______________________________________________________________________________________________________
+// a function to darken or lighten a given picture
+void darken_lighten() {
+    int decision;
+    // make the user choose
+    cout << "To darken please enter 1\nTo lighten please enter 2\nEnter: ";
+    cin >> decision;
+   if (decision == 1) {
+      // loop through all the pixels
+      for (int i = 0; i < SIZE; i++) {
+         for (int j = 0; j < SIZE; j++) {
+            //get all the surrounding pixels and multiply by 0.025
+            newimage[i][j] = (image[i + 1][j + 1] * 0.025 + image[i][j + 1] * 0.025 + image[i + 1][j] * 0.025 +
+                              image[i - 1][j - 1] * 0.025 + image[i][j - 1] * 0.025 + image[i - 1][j] * 0.025 +
+                              image[i - 1][j + 1] * 0.025 + image[i + 1][j - 1] * 0.025 + image[i][j] * 0.025 / 9);
+         }
+      }
+   }
+
+   else if (decision == 2) {
+      // loop through all the pixels
+      for (int i = 0; i < SIZE; i++) {
+         for (int j = 0; j < SIZE; j++) {
+               //add 255 to the initial pixels then divide by 2 to inc. the brightness
+               newimage[i][j] = (image[i][j]+255)/2 ;
+         }
+      }
+   }
+}
+// _______________________________________________________________________________________________________________________________________
 void Rotate_Image(){
    int x;
    cout<<"1-> rotate 90\n2-> rotate 180\n3-> rotate 270\nplease enter num of rotate:";
@@ -265,7 +316,7 @@ void Rotate_Image(){
       
    }
 }
-// ________________________________________
+// _______________________________________________________________________________________________________________________________________
 void detect(){
    cout<<"detect edges for image\n*****************************\n\n";
    bool temp[SIZE][SIZE];
@@ -297,71 +348,13 @@ void detect(){
       }
    }
 }
-// ___________________________________
-void mirror_image(){
-   int x;
-   cout <<"1-if you want 1/2 right\n2-if you want 1/2 left\n3-if you want 1/2 lower\n4-if you want 1/2 upper\n\n ";
-   cout<<"Enter your choice : ";
-   cin >> x;
-   if (x == 1)
-   {
-      for (int i = 0; i < SIZE; i++){
-         for (int j = 0; j < SIZE; j++){
-         image[i][j]= image[i][SIZE-j];
-         }
-      }
-   }
-   if (x == 2){
-      for (int i = 0; i < SIZE; i++) {
-         for (int j = SIZE/2; j < SIZE; j++) {
-         image[i][j] = image[i][SIZE-j];
-         }
-      }
-   }
-   if (x == 3){
-      for (int i = 0; i < SIZE; i++){
-         for (int j = 0; j < SIZE; j++){
-            image[i][j]= image[SIZE-1-i][j];
-         }
-      }
-   }
-   if (x == 4){
-      for (int i = 0; i < SIZE; i++){
-         for (int j = 0; j < SIZE; j++){
-            image[SIZE-1-i][j]= image[i][j];
-         }
-      }
-   }
-}
-// ___________________________________
-/*function that makes you choose 2 pictures to merge together and saves it*/
-void merge() {
-
-   for(int i=0; i<SIZE; i++){
-      for (int j=0; j<SIZE; j++){
-         new_image[i][j]=(image[i][j] + image2[i][j])/2;
-      }
-   }
-
-}
-/*function that blurs the loaded image and saves it*/
-void blur()
-{
-    for(int i=0; i<SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            new_image[i][j] = (image[i+1][j+1]*0.12 + image[i][j+1]*0.12 + 
-            image[i+1][j]*0.12 + image[i-1][j-1]*0.12 + image[i][j-1]*0.12 + 
-            image[i-1][j]*0.12 + image[i-1][j+1]*0.12 + image[i+1][j-1]*0.120 + image[i][j]*0.120/9);
-        }
-    }
-}
-// _________________________________________
+// _______________________________________________________________________________________________________
 void Enlarge_Image(){
    int x=0,y=0,z;
    cout<<"1->top left side\n2->down left side\n3->top right side\n4->down right side";
    cout<<"\nplease choose the num of the side you want :";
    cin>>z;
-// top left side 
+   // top left side 
    if(z==1){
       // loop on the top left side of image
       for (int i = 0; i < SIZE/2; i++) {
@@ -439,12 +432,89 @@ void Enlarge_Image(){
    }
    // save newimage in image
    for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
-       image[i][j]=newimage[i][j];
-    }
+      for (int j = 0; j< SIZE; j++) {
+         image[i][j]=newimage[i][j];
+      }
    }
 }
-// ____________________________________________
+// _____________________________________________________________________________________________________________
+void shrink ()
+{
+   int shrinkage,k=0,l=0;
+   cout << "1-shrink to 1/2 \n2-shrink to 1/3\n3-shrink to 1/4 \nenter your choice: ";
+   cin >> shrinkage;
+   if (shrinkage == 1)
+   {
+      for(int i=0; i<SIZE; i+=2) {
+         for (int j = 0; j < SIZE; j+=2) {
+            newimage[k][l] = image[i][j];
+            l++;
+         }
+         l=0;
+         k++;
+      }
+   }
+   else if (shrinkage == 2)
+   {
+      for(int i=0; i<SIZE; i+=3) {
+         for (int j = 0; j < SIZE; j+=3) {
+            newimage[k][l] = image[i][j];
+            l++;
+         }
+         l=0;
+         k++;
+      }
+
+   }
+   else if (shrinkage == 3)
+   {
+      for(int i=0; i<SIZE; i+=4) {
+         for (int j = 0; j < SIZE; j+=4) {
+            newimage[k][l] = image[i][j];
+            l++;
+         }
+         l=0;
+         k++;
+      }
+   }
+}
+// _______________________________________________________________________________________________________________________________________
+void mirror_image(){
+   int x;
+   cout <<"1-if you want 1/2 right\n2-if you want 1/2 left\n3-if you want 1/2 lower\n4-if you want 1/2 upper\n\n ";
+   cout<<"Enter your choice : ";
+   cin >> x;
+   if (x == 1)
+   {
+      for (int i = 0; i < SIZE; i++){
+         for (int j = 0; j < SIZE; j++){
+         image[i][j]= image[i][SIZE-j];
+         }
+      }
+   }
+   if (x == 2){
+      for (int i = 0; i < SIZE; i++) {
+         for (int j = SIZE/2; j < SIZE; j++) {
+         image[i][j] = image[i][SIZE-j];
+         }
+      }
+   }
+   if (x == 3){
+      for (int i = 0; i < SIZE; i++){
+         for (int j = 0; j < SIZE; j++){
+            image[i][j]= image[SIZE-1-i][j];
+         }
+      }
+   }
+   if (x == 4){
+      for (int i = 0; i < SIZE; i++){
+         for (int j = 0; j < SIZE; j++){
+            image[SIZE-1-i][j]= image[i][j];
+         }
+      }
+   }
+}
+// _______________________________________________________________________________________________________________________________________
 void Shuffle_Image(){
    int a,b,c,d,x=0,y=0;
    cout<<"please enter the arrange of photos :";
@@ -536,6 +606,18 @@ void Shuffle_Image(){
       }
       x=0;
 }
+// ________________________________________________________________________________________________________________________________________
+/*function that blurs the loaded image and saves it*/
+void blur()
+{
+   for(int i=0; i<SIZE; i++) {
+      for (int j = 0; j < SIZE; j++) {
+         newimage[i][j] = (image[i+1][j+1]*0.12 + image[i][j+1]*0.12 + 
+         image[i+1][j]*0.12 + image[i-1][j-1]*0.12 + image[i][j-1]*0.12 + 
+         image[i-1][j]*0.12 + image[i-1][j+1]*0.12 + image[i+1][j-1]*0.120 + image[i][j]*0.120/9);
+      }
+   }
+// _________________________________________________________________________________________________________________________________________
 
 
 
